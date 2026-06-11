@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0048)file:///Users/jaketrease/Downloads/budget_2.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Family Budget</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<link rel="stylesheet" href="./budget_files/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -23,8 +23,7 @@
     --text:#f2f2f7;--text2:#aeaeb2;--text3:#636366;
     --border:rgba(255,255,255,0.12);--border2:rgba(255,255,255,0.22);
     --teal-light:#0a2e22;--teal-dark:#4cd9a0;
-    --amber-light:#2e1f05;
-    --red-light:#2e0f0f;
+    --amber-light:#2e1f05;--red-light:#2e0f0f;
   }
 }
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;font-size:15px;color:var(--text);background:var(--bg3);min-height:100vh}
@@ -39,7 +38,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .sync-btn{font-size:11px;padding:3px 8px;border:0.5px solid var(--border2);border-radius:var(--radius);background:transparent;cursor:pointer;color:var(--text2)}
 .nav{display:flex;border-bottom:0.5px solid var(--border);margin-bottom:1.5rem}
-.nav-btn{flex:1;padding:10px 4px;font-size:13px;font-weight:500;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--text2);cursor:pointer;transition:color .15s}
+.nav-btn{flex:1;padding:10px 4px;font-size:13px;font-weight:500;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--text2);cursor:pointer}
 .nav-btn.active{color:var(--text);border-bottom-color:var(--text)}
 .tab{display:none}.tab.active{display:block}
 .section{margin-bottom:1.5rem}
@@ -108,14 +107,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 <div class="app">
   <div class="header"><h1>Family Budget</h1></div>
   <div class="sync-bar">
-    <span><span class="sync-dot" id="sync-dot"></span><span id="sync-status">Connecting...</span></span>
+    <span><span class="sync-dot err" id="sync-dot"></span><span id="sync-status">Sync failed — tap to retry</span></span>
     <button class="sync-btn" onclick="syncNow()"><i class="ti ti-refresh"></i> Sync</button>
   </div>
   <div class="nav">
-    <button class="nav-btn active" onclick="switchTab('overview')">Overview</button>
-    <button class="nav-btn" onclick="switchTab('categories')">Budget</button>
-    <button class="nav-btn" onclick="switchTab('debt')">Debt</button>
-    <button class="nav-btn" onclick="switchTab('transactions')">Transactions</button>
+    <button class="nav-btn active" onclick="switchTab(&#39;overview&#39;)">Overview</button>
+    <button class="nav-btn" onclick="switchTab(&#39;categories&#39;)">Budget</button>
+    <button class="nav-btn" onclick="switchTab(&#39;debt&#39;)">Debt</button>
+    <button class="nav-btn" onclick="switchTab(&#39;transactions&#39;)">Transactions</button>
   </div>
 
   <div id="tab-overview" class="tab active">
@@ -123,42 +122,198 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
       <div class="gauge-card">
         <div class="gauge-header">
           <span class="gauge-title">Fixed expenses / income</span>
-          <span class="gauge-val" id="fixed-pct">—</span>
+          <span class="gauge-val" id="fixed-pct" style="color: var(--teal-dark);">0%</span>
         </div>
-        <div class="gauge-bar"><div class="gauge-fill" id="fixed-fill" style="width:0%"></div></div>
+        <div class="gauge-bar"><div class="gauge-fill" id="fixed-fill" style="width: 0%; background: var(--teal);"></div></div>
         <div class="gauge-target">Target: under 50%</div>
       </div>
       <div class="metric-row">
         <div class="metric"><div class="metric-label">Income this month</div><div class="metric-val" id="ov-income">$0</div></div>
         <div class="metric"><div class="metric-label">Spent so far</div><div class="metric-val" id="ov-spent">$0</div></div>
-        <div class="metric"><div class="metric-label">Remaining</div><div class="metric-val" id="ov-remaining">$0</div></div>
-        <div class="metric"><div class="metric-label">Day of month</div><div class="metric-val" id="ov-day">—</div></div>
+        <div class="metric"><div class="metric-label">Remaining</div><div class="metric-val good" id="ov-remaining">$1</div></div>
+        <div class="metric"><div class="metric-label">Day of month</div><div class="metric-val" id="ov-day">11/30</div></div>
       </div>
     </div>
     <div class="section">
       <div class="section-label">Spending velocity</div>
-      <div id="velocity-list"></div>
+      <div id="velocity-list"><div style="font-size:13px;color:var(--text3);padding:8px 0">Set budgets in the Budget tab first</div></div>
     </div>
     <button class="add-btn" onclick="quickEntry()"><i class="ti ti-plus"></i> Log transaction</button>
   </div>
 
   <div id="tab-categories" class="tab">
-    <div class="section"><div class="section-label">Income</div><div id="income-cats"></div></div>
-    <div class="section"><div class="section-label">Fixed expenses</div><div id="fixed-cats"></div></div>
-    <div class="section"><div class="section-label">Variable expenses</div><div id="variable-cats"></div></div>
+    <div class="section"><div class="section-label">Income</div><div id="income-cats"><div class="cat-row">
+        <div class="cat-dot" style="background:#1D9E75"></div>
+        <div class="cat-name">Salary</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:130px">
+          <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px">
+            Budget: <input type="number" value="0" min="0" step="1" class="ninput" onchange="updateBudget(&#39;c1&#39;,this.value)">
+          </div>
+          
+        </div>
+      </div><div class="cat-row">
+        <div class="cat-dot" style="background:#1D9E75"></div>
+        <div class="cat-name">Side income</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:130px">
+          <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px">
+            Budget: <input type="number" value="0" min="0" step="1" class="ninput" onchange="updateBudget(&#39;c2&#39;,this.value)">
+          </div>
+          
+        </div>
+      </div></div></div>
+    <div class="section"><div class="section-label">Fixed expenses</div><div id="fixed-cats"><div class="cat-row">
+        <div class="cat-dot" style="background:#534AB7"></div>
+        <div class="cat-name">Mortgage/Rent</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:130px">
+          <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px">
+            Budget: <input type="number" value="0" min="0" step="1" class="ninput" onchange="updateBudget(&#39;c3&#39;,this.value)">
+          </div>
+          <div style="font-size:11px;color:var(--text3)">$0 spent</div>
+          <div class="mini-bar" style="width:100%"><div class="mini-fill" style="width:0%;background:#534AB7"></div></div>
+        </div>
+      </div><div class="cat-row">
+        <div class="cat-dot" style="background:#534AB7"></div>
+        <div class="cat-name">Car payment</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:130px">
+          <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px">
+            Budget: <input type="number" value="0" min="0" step="1" class="ninput" onchange="updateBudget(&#39;c4&#39;,this.value)">
+          </div>
+          <div style="font-size:11px;color:var(--text3)">$0 spent</div>
+          <div class="mini-bar" style="width:100%"><div class="mini-fill" style="width:0%;background:#534AB7"></div></div>
+        </div>
+      </div><div class="cat-row">
+        <div class="cat-dot" style="background:#534AB7"></div>
+        <div class="cat-name">Insurance</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:130px">
+          <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px">
+            Budget: <input type="number" value="0" min="0" step="1" class="ninput" onchange="updateBudget(&#39;c5&#39;,this.value)">
+          </div>
+          <div style="font-size:11px;color:var(--text3)">$0 spent</div>
+          <div class="mini-bar" style="width:100%"><div class="mini-fill" style="width:0%;background:#534AB7"></div></div>
+        </div>
+      </div><div class="cat-row">
+        <div class="cat-dot" style="background:#534AB7"></div>
+        <div class="cat-name">Utilities</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:130px">
+          <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px">
+            Budget: <input type="number" value="0" min="0" step="1" class="ninput" onchange="updateBudget(&#39;c6&#39;,this.value)">
+          </div>
+          <div style="font-size:11px;color:var(--text3)">$0 spent</div>
+          <div class="mini-bar" style="width:100%"><div class="mini-fill" style="width:0%;background:#534AB7"></div></div>
+        </div>
+      </div><div class="cat-row">
+        <div class="cat-dot" style="background:#BA7517"></div>
+        <div class="cat-name">IRS installment</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:130px">
+          <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px">
+            Budget: <input type="number" value="0" min="0" step="1" class="ninput" onchange="updateBudget(&#39;c7&#39;,this.value)">
+          </div>
+          <div style="font-size:11px;color:var(--text3)">$0 spent</div>
+          <div class="mini-bar" style="width:100%"><div class="mini-fill" style="width:0%;background:#BA7517"></div></div>
+        </div>
+      </div><div class="cat-row">
+        <div class="cat-dot" style="background:#BA7517"></div>
+        <div class="cat-name">Debt management plan</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:130px">
+          <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px">
+            Budget: <input type="number" value="0" min="0" step="1" class="ninput" onchange="updateBudget(&#39;c8&#39;,this.value)">
+          </div>
+          <div style="font-size:11px;color:var(--text3)">$0 spent</div>
+          <div class="mini-bar" style="width:100%"><div class="mini-fill" style="width:0%;background:#BA7517"></div></div>
+        </div>
+      </div></div></div>
+    <div class="section"><div class="section-label">Variable expenses</div><div id="variable-cats"><div class="cat-row">
+        <div class="cat-dot" style="background:#E24B4A"></div>
+        <div class="cat-name">Groceries</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:130px">
+          <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px">
+            Budget: <input type="number" value="0" min="0" step="1" class="ninput" onchange="updateBudget(&#39;c9&#39;,this.value)">
+          </div>
+          <div style="font-size:11px;color:var(--text3)">$0 spent</div>
+          <div class="mini-bar" style="width:100%"><div class="mini-fill" style="width:0%;background:#E24B4A"></div></div>
+        </div>
+      </div><div class="cat-row">
+        <div class="cat-dot" style="background:#E24B4A"></div>
+        <div class="cat-name">Gas</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:130px">
+          <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px">
+            Budget: <input type="number" value="0" min="0" step="1" class="ninput" onchange="updateBudget(&#39;c10&#39;,this.value)">
+          </div>
+          <div style="font-size:11px;color:var(--text3)">$0 spent</div>
+          <div class="mini-bar" style="width:100%"><div class="mini-fill" style="width:0%;background:#E24B4A"></div></div>
+        </div>
+      </div><div class="cat-row">
+        <div class="cat-dot" style="background:#E24B4A"></div>
+        <div class="cat-name">Dining out</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:130px">
+          <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px">
+            Budget: <input type="number" value="0" min="0" step="1" class="ninput" onchange="updateBudget(&#39;c11&#39;,this.value)">
+          </div>
+          <div style="font-size:11px;color:var(--text3)">$0 spent</div>
+          <div class="mini-bar" style="width:100%"><div class="mini-fill" style="width:0%;background:#E24B4A"></div></div>
+        </div>
+      </div><div class="cat-row">
+        <div class="cat-dot" style="background:#E24B4A"></div>
+        <div class="cat-name">Entertainment</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:130px">
+          <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px">
+            Budget: <input type="number" value="0" min="0" step="1" class="ninput" onchange="updateBudget(&#39;c12&#39;,this.value)">
+          </div>
+          <div style="font-size:11px;color:var(--text3)">$0 spent</div>
+          <div class="mini-bar" style="width:100%"><div class="mini-fill" style="width:0%;background:#E24B4A"></div></div>
+        </div>
+      </div><div class="cat-row">
+        <div class="cat-dot" style="background:#E24B4A"></div>
+        <div class="cat-name">Clothing</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:130px">
+          <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px">
+            Budget: <input type="number" value="0" min="0" step="1" class="ninput" onchange="updateBudget(&#39;c13&#39;,this.value)">
+          </div>
+          <div style="font-size:11px;color:var(--text3)">$0 spent</div>
+          <div class="mini-bar" style="width:100%"><div class="mini-fill" style="width:0%;background:#E24B4A"></div></div>
+        </div>
+      </div><div class="cat-row">
+        <div class="cat-dot" style="background:#888780"></div>
+        <div class="cat-name">Miscellaneous</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:130px">
+          <div style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px">
+            Budget: <input type="number" value="0" min="0" step="1" class="ninput" onchange="updateBudget(&#39;c14&#39;,this.value)">
+          </div>
+          <div style="font-size:11px;color:var(--text3)">$0 spent</div>
+          <div class="mini-bar" style="width:100%"><div class="mini-fill" style="width:0%;background:#888780"></div></div>
+        </div>
+      </div></div></div>
     <button class="add-btn" onclick="addCategory()"><i class="ti ti-plus"></i> Add category</button>
   </div>
 
   <div id="tab-debt" class="tab">
     <div class="section">
       <div class="section-label">Fixed / protected</div>
-      <div id="fixed-debts"></div>
+      <div id="fixed-debts"><div class="card">
+      <div class="debt-name">IRS back taxes<span class="fixed-badge">protected</span></div>
+      <div class="debt-meta">
+        Bal: <input type="number" value="0" min="0" step="1" class="ninput-md" onchange="updateDebt(&#39;d1&#39;,&#39;balance&#39;,this.value)">
+        Pmt: <input type="number" value="0" min="0" step="1" class="ninput" onchange="updateDebt(&#39;d1&#39;,&#39;minPayment&#39;,this.value)">/mo
+      </div>
+      <div class="debt-bar"><div class="debt-fill" style="width:0%;background:var(--amber)"></div></div>
+      <div class="debt-stats"><span>$0 remaining</span><span>0% paid</span></div>
+      
+    </div><div class="card">
+      <div class="debt-name">Consumer debt plan<span class="fixed-badge">protected</span></div>
+      <div class="debt-meta">
+        Bal: <input type="number" value="0" min="0" step="1" class="ninput-md" onchange="updateDebt(&#39;d2&#39;,&#39;balance&#39;,this.value)">
+        Pmt: <input type="number" value="0" min="0" step="1" class="ninput" onchange="updateDebt(&#39;d2&#39;,&#39;minPayment&#39;,this.value)">/mo
+      </div>
+      <div class="debt-bar"><div class="debt-fill" style="width:0%;background:var(--amber)"></div></div>
+      <div class="debt-stats"><span>$0 remaining</span><span>0% paid</span></div>
+      
+    </div></div>
     </div>
     <div class="section">
       <div class="section-label">Student loans — strategy</div>
       <div class="toggle" id="strategy-toggle">
-        <button class="toggle-btn active" onclick="setStrategy('avalanche')">Avalanche (highest rate first)</button>
-        <button class="toggle-btn" onclick="setStrategy('snowball')">Snowball (lowest balance first)</button>
+        <button class="toggle-btn active" onclick="setStrategy(&#39;avalanche&#39;)">Avalanche (highest rate first)</button>
+        <button class="toggle-btn" onclick="setStrategy(&#39;snowball&#39;)">Snowball (lowest balance first)</button>
       </div>
       <div class="extra-row">
         <span class="extra-label">Extra / mo</span>
@@ -166,14 +321,53 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
         <span class="extra-val" id="extra-val">$0</span>
       </div>
       <div class="impact-line" id="impact-line">Add extra payments above to see payoff impact</div>
-      <div id="student-debts"></div>
+      <div id="student-debts"><div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <div class="debt-name">Student loan 1</div>
+        <div style="font-size:12px;color:var(--text2)">0% APR</div>
+      </div>
+      <div class="debt-meta">
+        Bal: <input type="number" value="0" min="0" step="1" class="ninput-md" onchange="updateDebt(&#39;d3&#39;,&#39;balance&#39;,this.value)">
+        Rate: <input type="number" value="0" min="0" step="0.01" class="ninput-sm" onchange="updateDebt(&#39;d3&#39;,&#39;rate&#39;,this.value)">%
+        Min: <input type="number" value="0" min="0" step="1" class="ninput" onchange="updateDebt(&#39;d3&#39;,&#39;minPayment&#39;,this.value)">/mo
+      </div>
+      <div class="debt-bar"><div class="debt-fill" style="width:0%"></div></div>
+      <div class="debt-stats"><span>$0 remaining</span><span>0% paid</span></div>
+      
+    </div><div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <div class="debt-name">Student loan 2</div>
+        <div style="font-size:12px;color:var(--text2)">0% APR</div>
+      </div>
+      <div class="debt-meta">
+        Bal: <input type="number" value="0" min="0" step="1" class="ninput-md" onchange="updateDebt(&#39;d4&#39;,&#39;balance&#39;,this.value)">
+        Rate: <input type="number" value="0" min="0" step="0.01" class="ninput-sm" onchange="updateDebt(&#39;d4&#39;,&#39;rate&#39;,this.value)">%
+        Min: <input type="number" value="0" min="0" step="1" class="ninput" onchange="updateDebt(&#39;d4&#39;,&#39;minPayment&#39;,this.value)">/mo
+      </div>
+      <div class="debt-bar"><div class="debt-fill" style="width:0%"></div></div>
+      <div class="debt-stats"><span>$0 remaining</span><span>0% paid</span></div>
+      
+    </div><div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <div class="debt-name">Student loan 3</div>
+        <div style="font-size:12px;color:var(--text2)">0% APR</div>
+      </div>
+      <div class="debt-meta">
+        Bal: <input type="number" value="0" min="0" step="1" class="ninput-md" onchange="updateDebt(&#39;d5&#39;,&#39;balance&#39;,this.value)">
+        Rate: <input type="number" value="0" min="0" step="0.01" class="ninput-sm" onchange="updateDebt(&#39;d5&#39;,&#39;rate&#39;,this.value)">%
+        Min: <input type="number" value="0" min="0" step="1" class="ninput" onchange="updateDebt(&#39;d5&#39;,&#39;minPayment&#39;,this.value)">/mo
+      </div>
+      <div class="debt-bar"><div class="debt-fill" style="width:0%"></div></div>
+      <div class="debt-stats"><span>$0 remaining</span><span>0% paid</span></div>
+      
+    </div></div>
     </div>
   </div>
 
   <div id="tab-transactions" class="tab">
     <div class="import-area" onclick="triggerImport()">
       <i class="ti ti-upload" style="font-size:20px;margin-bottom:6px;display:block"></i>
-      Drop CSV or tap to import bank export
+      Tap to import bank CSV export
     </div>
     <input type="file" id="csv-input" accept=".csv" style="display:none" onchange="handleCSV(this)">
     <button class="add-btn" onclick="showEntryForm()" style="margin-bottom:1rem"><i class="ti ti-plus"></i> Add manually</button>
@@ -205,12 +399,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
       </div>
     </div>
     <div class="section-label" style="margin-bottom:.5rem">This month</div>
-    <div id="tx-list"></div>
+    <div id="tx-list"><div style="font-size:13px;color:var(--text3);padding:8px 0">No transactions yet this month</div></div>
   </div>
 </div>
 
 <script>
-const API = 'https://script.google.com/macros/s/AKfycbwZhX0AwCIKRv3PmNxrbaKyOwwx_4FdszN0gc4vu-31f2jnLTcNjod0t-qsFMbq0b5FqQ/exec';
+const API = 'https://script.google.com/macros/s/AKfycbytBz-DmgyaIcsAVv9q-_KgSAxqzKMTqoNg8h1ihamAAigSmu0fTcQrvUa2U4uThjx27w/exec';
 const today = new Date();
 const DAY = today.getDate();
 const DAYS_IN_MONTH = new Date(today.getFullYear(), today.getMonth()+1, 0).getDate();
@@ -256,11 +450,33 @@ function setSyncStatus(s){
   if(s==='err') lbl.textContent='Sync failed — tap to retry';
 }
 
+function jsonpFetch(url){
+  return new Promise((resolve,reject)=>{
+    const cb='cb_'+Date.now();
+    const script=document.createElement('script');
+    const timer=setTimeout(()=>{
+      cleanup();
+      reject(new Error('Timeout'));
+    },15000);
+    function cleanup(){
+      clearTimeout(timer);
+      delete window[cb];
+      if(script.parentNode) script.parentNode.removeChild(script);
+    }
+    window[cb]=function(data){
+      cleanup();
+      resolve(data);
+    };
+    script.src=url+(url.includes('?')?'&':'?')+'callback='+cb;
+    script.onerror=()=>{cleanup();reject(new Error('Script error'));};
+    document.head.appendChild(script);
+  });
+}
+
 async function readFromSheet(){
   setSyncStatus('loading');
   try{
-    const res=await fetch(API+'?action=read');
-    const data=await res.json();
+    const data=await jsonpFetch(API+'?action=read');
     if(data.state){
       state=data.state;
       if(!state.categories) state.categories=DEFAULT_STATE.categories;
@@ -269,15 +485,21 @@ async function readFromSheet(){
     }
     setSyncStatus('ok');
     renderAll();
-  }catch(e){setSyncStatus('err');renderAll();}
+  }catch(e){
+    setSyncStatus('err');
+    renderAll();
+  }
 }
 
 async function writeToSheet(){
   setSyncStatus('loading');
   try{
-    await fetch(API,{method:'POST',body:JSON.stringify({action:'write',state}),headers:{'Content-Type':'application/json'}});
+    const payload=encodeURIComponent(JSON.stringify(state));
+    await jsonpFetch(API+'?action=write&payload='+payload);
     setSyncStatus('ok');
-  }catch(e){setSyncStatus('err');}
+  }catch(e){
+    setSyncStatus('err');
+  }
 }
 
 function scheduleSave(){
@@ -291,7 +513,10 @@ function fmt(n){return '$'+Math.abs(n).toLocaleString('en-US',{minimumFractionDi
 
 function getMonthTx(){
   const m=today.getMonth(),y=today.getFullYear();
-  return state.transactions.filter(t=>{const d=new Date(t.date);return d.getMonth()===m&&d.getFullYear()===y;});
+  return state.transactions.filter(t=>{
+    const d=new Date(t.date);
+    return d.getMonth()===m&&d.getFullYear()===y;
+  });
 }
 
 function catSpent(id){return getMonthTx().filter(t=>t.catId===id).reduce((s,t)=>s+t.amount,0);}
@@ -447,7 +672,7 @@ function renderDebt(){
   if(extra>0&&sorted[0]){
     const m=payoffMonths(sorted[0].balance,sorted[0].rate,sorted[0].minPayment+extra);
     if(m) impact.textContent=`+${fmt(extra)}/mo hits ${sorted[0].name} first — payoff ~${monthsToDate(m)}`;
-  } else {
+  }else{
     impact.textContent='Add extra payments above to see payoff impact';
   }
 }
@@ -565,5 +790,6 @@ document.getElementById('extra-slider').value=state.extraPayment||0;
 document.getElementById('extra-val').textContent=fmt(state.extraPayment||0);
 readFromSheet();
 </script>
-</body>
-</html>
+
+
+</body></html>
